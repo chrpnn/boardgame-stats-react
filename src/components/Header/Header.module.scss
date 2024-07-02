@@ -1,0 +1,44 @@
+$header-color: #393762;
+$description-color: #ccc;
+$background-color: #28333f;
+$input-color: #2f3c50;
+$text-color: #fff;
+$accent-color: #7b61ff;
+$devider-color: #4b576b;
+$border-color: #4b576b;
+
+.root {
+    min-height: 58px;
+    display: flex;
+    justify-content: space-between;
+    padding: 25px;
+    gap: 25px;
+    
+
+    .avatarGroup {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex: 1;
+
+        img {
+            height: 48px;
+            border-radius: 50%;
+        }
+
+        p {
+            color: $text-color;
+            font-size: 15px;
+            font-weight: 600;
+        }
+    }
+
+    .notificationGroup {
+        display: flex;
+        gap: 10px;
+
+        img {
+            width: 24px;
+        }
+    }
+}

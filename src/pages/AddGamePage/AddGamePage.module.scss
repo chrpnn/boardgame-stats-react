@@ -1,0 +1,54 @@
+@import "../../variables.scss";
+
+.root {
+    background: radial-gradient(circle at 100% 100%,
+            rgba(241, 73, 132, 0.2) 0%,
+            rgba(241, 73, 133, 0) 100%);
+    background-color: $background-color;
+    min-height: 100vh;
+    padding: 15px;
+
+    .formGroup {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding-block-start: calc(100vh / 2 - 200px);
+        gap: 20px;
+        
+    }
+
+    .form {        
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        width: 100%;
+
+        .label {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            color: $text-color;
+        }
+
+        .input {
+            width: 220px;
+            height: 50px;
+            color: $text-color;
+            border: $border-color;
+            background-color: $input-color;
+        }
+    }
+    
+    .button {
+        width: 100%;
+        cursor: pointer;
+        background-color: $accent-color;
+        border: none;
+        border-radius: 12px;         
+        color: $text-color;
+        font-size: 24px;
+        font-weight: 700;
+        min-height: 56px;
+        max-width: 100%;
+    }
+}
