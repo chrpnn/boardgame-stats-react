@@ -7,6 +7,7 @@ import styles from "./Games.module.scss";
 export default function Games() {
     const [games, setGames] = React.useState([]);
     const [uniqueGames, setUniqueGames] = React.useState([]);
+    const [gameStatusesMap, setGameStatusesMap] = React.useState({}); 
 
     const [showAll, setShowAll] = React.useState(false);
 
@@ -18,6 +19,18 @@ export default function Games() {
             .then((arr) => {
                 console.log(arr);
                 setGames(arr);
+                
+                const gameStatusesMap = {};
+                arr.forEach((game) => {
+                    const { gameName, status } = game;
+                    if (!gameStatusesMap[gameName]) {
+                        gameStatusesMap[gameName] = [];
+                    }
+                    gameStatusesMap[gameName].push(status);
+                });
+                console.log("объект с историей результатов:", gameStatusesMap);
+                setGameStatusesMap(gameStatusesMap);
+
                 const gameCounts = {};
                 arr.forEach((game) => {
                     if (!gameCounts[game.gameName]) {
@@ -26,9 +39,11 @@ export default function Games() {
                     gameCounts[game.gameName].count += 1;
                 });
                 setUniqueGames(Object.values(gameCounts));
+                
             })
             .catch((error) => console.error("Error fetching the games data:", error));
     }, []);
+
 
     return (
         <div className={styles.root}>
@@ -41,7 +56,7 @@ export default function Games() {
                     {showAll ? "Hide" : "Show all"}
                 </button>
             </div>
-            <FastInfo />
+            <FastInfo uniqueGames={uniqueGames} gameStatusesMap={gameStatusesMap}/>
             <div className={styles.cards}>
                 {displayedGames.map((obj, i) => (
                     <GameCard key={obj.id} {...obj} />
