@@ -5,10 +5,11 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import App from "./App";
 import Start from "./pages/Start/Start";
 import Login from "./pages/LogIn/Login";
+import SignUp from "./pages/SignUp/SignUp";
 import Home from "./pages/Home/Home";
 import AddGamePage from "./pages/AddGamePage/AddGamePage";
 
-
+import { UserProvider } from "./UserContext";
 
 const router = createBrowserRouter([
     {
@@ -20,7 +21,6 @@ const router = createBrowserRouter([
                 element: <h1> egdgdeg </h1>,
             },
         ],
-        
     },
     {
         path: "/start",
@@ -31,14 +31,22 @@ const router = createBrowserRouter([
         element: <Login />,
     },
     {
+        path: "/signup",
+        element: <SignUp />,
+    },
+    {
         path: "/home",
         element: <Home />,
     },
     {
         path: "/addgame",
         element: <AddGamePage />,
-    },    
+    },
 ]);
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
-root.render(<RouterProvider router={router} />);
+root.render(
+    <UserProvider>
+        <RouterProvider router={router} />
+    </UserProvider>
+);

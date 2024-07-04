@@ -1,31 +1,55 @@
 import React from "react";
 import styles from "./AddResultModal.module.scss";
+import { getFirestore, collection, addDoc } from "firebase/firestore";
 
 export default function AddResultModal({ active, setActive }) {
     const [gameName, setGameName] = React.useState("");
     const [date, setDate] = React.useState("");
     const [status, setStatus] = React.useState("win");
 
-    const handleAddGame = () => {
+    const db = getFirestore();
+
+    const handleAddGame = async () => {
         const newGame = {
             gameName,
             date,
             status,
+            createdAt: new Date(),
         };
-
-        fetch("https://66795ef418a459f6394f7682.mockapi.io/games", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(newGame),
-        })
-            .then((response) => response.json())
-            .then(() => {
-                setActive(false);
-            })
-            .catch((error) => console.error("Error adding game:", error));
+    
+        try {
+            await addDoc(collection(db, "games"), newGame);
+            setActive(false);
+            console.log("Document written");
+            setGameName("");
+            setDate("");
+            setStatus("win");
+        } catch (error) {
+            console.error("Error adding game:", error);
+        }
     };
+
+    // старый вариант отправки данных партии (мокАпи)
+    // const handleAddGame = () => {
+    //     const newGame = {
+    //         gameName,
+    //         date,
+    //         status,
+    //     };
+
+    //     fetch("https://66795ef418a459f6394f7682.mockapi.io/games", {
+    //         method: "POST",
+    //         headers: {
+    //             "Content-Type": "application/json",
+    //         },
+    //         body: JSON.stringify(newGame),
+    //     })
+    //         .then((response) => response.json())
+    //         .then(() => {
+    //             setActive(false);
+    //         })
+    //         .catch((error) => console.error("Error adding game:", error));
+    // };
 
     return (
         <div

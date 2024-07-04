@@ -1,4 +1,5 @@
 import React from "react";
+import { getFirestore, collection, query, where, getDocs } from "firebase/firestore";
 import GameResult from "../GameResult/GameResult";
 import Search from "../Search/Search";
 
@@ -16,18 +17,48 @@ export default function History({ setGameCount, setPercentWinsCount }) {
     }, [games]);
 
     React.useEffect(() => {
-        fetch(`https://66795ef418a459f6394f7682.mockapi.io/games?${search}`)
-            .then((response) => response.json())
-            .then((arr) => {
+        const db = getFirestore();
+    
+        const fetchGames = async () => {
+            try {
+                const q = searchValue
+                    ? query(collection(db, "games"), where("gameName", "==", searchValue))
+                    : collection(db, "games");
+    
+                const querySnapshot = await getDocs(q);
+                const arr = querySnapshot.docs.map((doc) => ({
+                    id: doc.id,
+                    ...doc.data(),
+                }));
+    
                 setGames(arr);
                 setGameCount(arr.length);
                 setPercentWinsCount(
                     (arr.filter((item) => item.status === "win").length / arr.length) *
                     100
                 );
-            })
-            .catch((error) => console.error("Error fetching the games data:", error));
-    }, [searchValue]);
+    
+            } catch (error) {
+                console.error("Error fetching the games data:", error);
+            }
+        };
+    
+        fetchGames();
+    }, [searchValue, setGameCount, setPercentWinsCount]);
+
+    // React.useEffect(() => {
+    //     fetch(`https://66795ef418a459f6394f7682.mockapi.io/games?${search}`)
+    //         .then((response) => response.json())
+    //         .then((arr) => {
+    //             setGames(arr);
+    //             setGameCount(arr.length);
+    //             setPercentWinsCount(
+    //                 (arr.filter((item) => item.status === "win").length / arr.length) *
+    //                 100
+    //             );
+    //         })
+    //         .catch((error) => console.error("Error fetching the games data:", error));
+    // }, [searchValue]);
 
     const displayedGames = showAll ? sortedGames : sortedGames.slice(0, 3);
 
@@ -35,7 +66,10 @@ export default function History({ setGameCount, setPercentWinsCount }) {
         <div className={styles.root}>
             <div className={styles.titleGroup}>
                 <h2>History</h2>
-                <button className={styles.toggleShowAll} onClick={() => setShowAll(!showAll)}>
+                <button
+                    className={styles.toggleShowAll}
+                    onClick={() => setShowAll(!showAll)}
+                >
                     {showAll ? "Hide" : "Show all"}
                 </button>
             </div>

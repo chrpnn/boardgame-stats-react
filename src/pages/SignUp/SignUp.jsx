@@ -1,45 +1,51 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-import MainButton from "../../components/MainButton/MainButton";
 import BackButton from "../../components/BackButton/BackButton";
+import MainButton from "../../components/MainButton/MainButton";
 
-import styles from "./Login.module.scss";
+import styles from "./SignUp.module.scss";
 
 import logoImage from "../../assets/Logo.svg";
 import googleLogo from "../../assets/Google-logo.svg";
 import twitterLogo from "../../assets/Frame.svg";
 import facebookLogo from "../../assets/Facebook-logo.svg";
 
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { auth } from "../../firebase";
 
-export default function LogIn() {
+export default function SignUp() {
     const [email, setEmail] = React.useState("");
+    const [nickname, setNickname] = React.useState("");
     const [password, setPassword] = React.useState("");
+    const [confirmPassword, setConfirmPassword] = React.useState("");
     const [error, setError] = React.useState("");
     const navigate = useNavigate();
 
-    const [rememberMe, setRememberMe] = React.useState(true);
-    const handleRememberMeChange = () => {
-        setRememberMe(!rememberMe);
-        console.log(!rememberMe);
-    };
-
-    const logIn = (e) => {
+    const register = (e) => {
         e.preventDefault();
-        signInWithEmailAndPassword(auth, email, password)
+        if (password !== confirmPassword) {
+            setError("Passwords do not match");
+            return;
+        }
+        createUserWithEmailAndPassword(auth, email, password)
+            .then((userCredential) => {
+                const user = userCredential.user;
+                console.log("user:",user);
+                return updateProfile(user, {
+                    displayName: nickname,
+                });
+            })
             .then((user) => {
                 console.log(user);
                 setEmail("");
                 setPassword("");
+                setConfirmPassword("");
                 setError("");
+                setNickname("");
                 navigate("/home");
             })
-            .catch((err) => {
-                console.log(err);
-                setError("Account doesn't exist");
-            });
+            .catch((err) => console.log(err));
     };
 
     return (
@@ -48,7 +54,7 @@ export default function LogIn() {
             <div className={styles.loginContainer}>
                 <img className={styles.logo} src={logoImage} alt="Logo" />
                 <div className={styles.loginGroup}>
-                    <h1 className={styles.title}>Log In</h1>
+                    <h1 className={styles.title}>Create an account</h1>
                     <form className={styles.inputGroup}>
                         <input
                             type="email"
@@ -58,34 +64,34 @@ export default function LogIn() {
                             onChange={(e) => setEmail(e.target.value)}
                         />
                         <input
+                            type="text"
+                            placeholder="Nickname"
+                            className={styles.input}
+                            value={nickname}
+                            onChange={(e) => setNickname(e.target.value)}
+                        />
+                        <input
                             type="password"
                             placeholder="Password"
                             className={styles.input}
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                         />
+                        <input
+                            type="password"
+                            placeholder="Confirm password"
+                            className={styles.input}
+                            value={confirmPassword}
+                            onChange={(e) => setConfirmPassword(e.target.value)}
+                        />
                     </form>
 
-                    <div className={styles.checkboxGroup}>
-                        <label className={styles.checkbox}>
-                            <input
-                                type="checkbox"
-                                checked={rememberMe}
-                                onChange={handleRememberMeChange}
-                                className={styles.hiddenCheckbox}
-                            />
-                            <span className={styles.customCheckbox}></span>
-                            Remember Me
-                        </label>
-                        <a
-                            href="https://www.youtube.com/watch?v=dQw4w9WgXcQ&ab_channel=RickAstley"
-                            style={{ color: "#7B61FF" }}
-                        >
-                            Forgot Password ?
-                        </a>
-                    </div>
-                    <MainButton className={styles.loginButton}  onClick={logIn}>
-                        Log In
+                    <MainButton
+                        className={styles.loginButton}
+                        to="/home"
+                        onClick={register}
+                    >
+                        Create
                     </MainButton>
                     {error && <p className={styles.error}>{error}</p>}
                 </div>
@@ -103,11 +109,6 @@ export default function LogIn() {
                             <img src={twitterLogo} alt="Twitter" />
                         </button>
                     </div>
-                </div>
-
-                <div className={styles.signUp}>
-                    <span>New User? </span>
-                    <Link to="/signup">Sign Up</Link>
                 </div>
             </div>
         </div>

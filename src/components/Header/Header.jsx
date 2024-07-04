@@ -6,7 +6,11 @@ import avatar from "../../assets/Default.jpg";
 import notificationLogo from "../../assets/direct-normal.svg";
 import smslogo from "../../assets/sms-notification.svg";
 
+import { useUser } from "../../UserContext";
+
 export default function Header() {
+  const { user } = useUser();
+
   return (
     <div>
       <div className={styles.root}>
@@ -16,7 +20,7 @@ export default function Header() {
           <p>
             HELLO!
             <br />
-            Daniela!
+            {user ? user.displayName : "Guest"}
           </p>
         </div>
         <div className={styles.notificationGroup}>
