@@ -35,10 +35,16 @@ $border-color: #4b576b;
 
     .notificationGroup {
         display: flex;
-        gap: 10px;
+        gap: 10px;        
 
-        img {
-            width: 24px;
+        .logoutBtn {
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+            
+            img {
+                width: 24px;
+            }
         }
     }
 }

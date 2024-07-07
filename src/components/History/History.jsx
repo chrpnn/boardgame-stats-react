@@ -46,20 +46,6 @@ export default function History({ setGameCount, setPercentWinsCount }) {
         fetchGames();
     }, [searchValue, setGameCount, setPercentWinsCount]);
 
-    // React.useEffect(() => {
-    //     fetch(`https://66795ef418a459f6394f7682.mockapi.io/games?${search}`)
-    //         .then((response) => response.json())
-    //         .then((arr) => {
-    //             setGames(arr);
-    //             setGameCount(arr.length);
-    //             setPercentWinsCount(
-    //                 (arr.filter((item) => item.status === "win").length / arr.length) *
-    //                 100
-    //             );
-    //         })
-    //         .catch((error) => console.error("Error fetching the games data:", error));
-    // }, [searchValue]);
-
     const displayedGames = showAll ? sortedGames : sortedGames.slice(0, 3);
 
     return (

@@ -6,9 +6,9 @@ import PopLogo from "../../assets/clipboard-heart-svgrepo-com.svg";
 import SmileLogo from "../../assets/smile-circle-svgrepo-com.svg";
 import SadLogo from "../../assets/sad-circle-svgrepo-com.svg";
 
-export default function FastInfo({ uniqueGames, gameStatusesMap }) {
+export default function FastInfo({ uniqueGames, gameStats }) {
     console.log(uniqueGames);
-    console.log(gameStatusesMap);
+    console.log(gameStats );
 
     const findMaxObject = (arr) => {
         let maxObject = null;
@@ -23,10 +23,27 @@ export default function FastInfo({ uniqueGames, gameStatusesMap }) {
         console.log("Объект с максимальным значением count:", maxObject);
         return { maxCount, maxObject };
     };
+
+    const findMaxMinWinPercentage = (arr) => {
+        if (arr.length === 0) return { maxWinGame: null, minWinGame: null }; 
+
+        let maxWinGame = arr[0];
+        let minWinGame = arr[0];
+
+        arr.forEach((game) => {
+            if (game.winPercentage > maxWinGame.winPercentage) {
+                maxWinGame = game;
+            }
+            if (game.winPercentage < minWinGame.winPercentage) {
+                minWinGame = game;
+            }
+        });
+
+        return { maxWinGame, minWinGame };
+    };
     
     const { maxCount, maxObject } = findMaxObject(uniqueGames);
-
-   //пока аопрос с передачей объекта не реализован. наверное нужно передавать все одним обеъктом, а не новым
+    const { maxWinGame, minWinGame } = findMaxMinWinPercentage(gameStats);
 
     return (
         <div className={styles.root}>
@@ -38,14 +55,13 @@ export default function FastInfo({ uniqueGames, gameStatusesMap }) {
             </div>
             <div className={styles.infoBlock}>
                 <img src={SmileLogo} alt="Smile" />
-                <p className={styles.title}>Carcassonne</p>
-                <p>Побед: 10.5 %</p>
-                
+                <p className={styles.title}>{maxWinGame && maxWinGame.gameName ? maxWinGame.gameName : "Untitled"}</p>
+                <p>Побед: {maxWinGame ? maxWinGame.winPercentage.toFixed(1) : 0} %</p>
             </div>
             <div className={styles.infoBlock}>
                 <img src={SadLogo} alt="Sad" />
-                <p className={styles.title}>Carcassonne</p>
-                <p>Побед: 2.5 %</p>
+                <p className={styles.title}>{minWinGame && minWinGame.gameName ? minWinGame.gameName : "Untitled"}</p>
+                <p>Побед: {minWinGame ? minWinGame.winPercentage.toFixed(1) : 0} %</p>
             </div>
         </div>
     );

@@ -8,7 +8,7 @@ import styles from "./Games.module.scss";
 export default function Games() {
     const [games, setGames] = React.useState([]);
     const [uniqueGames, setUniqueGames] = React.useState([]);
-    const [gameStatusesMap, setGameStatusesMap] = React.useState({});
+    const [gameStats, setGameStats] = React.useState([]);
     const [showAll, setShowAll] = React.useState(false);
 
     const displayedGames = showAll ? uniqueGames : uniqueGames.slice(0, 4);
@@ -26,62 +26,28 @@ export default function Games() {
 
                 setGames(arr);
 
-                const gameStatusesMap = {};
-                arr.forEach((game) => {
-                    const { gameName, status } = game;
-                    if (!gameStatusesMap[gameName]) {
-                        gameStatusesMap[gameName] = [];
-                    }
-                    gameStatusesMap[gameName].push(status);
-                });
-                setGameStatusesMap(gameStatusesMap);
-
                 const gameCounts = {};
                 arr.forEach((game) => {
                     if (!gameCounts[game.gameName]) {
-                        gameCounts[game.gameName] = { ...game, count: 0 };
+                        gameCounts[game.gameName] = { ...game, count: 0, wins: 0 }; 
                     }
                     gameCounts[game.gameName].count += 1;
+                    if (game.status === "win") {
+                        gameCounts[game.gameName].wins += 1; 
+                    }
                 });
+                const gameStats = Object.values(gameCounts).map(game => ({
+                    ...game,
+                    winPercentage: (game.wins / game.count) * 100 
+                }));
                 setUniqueGames(Object.values(gameCounts));
+                setGameStats(gameStats); 
             } catch (error) {
                 console.error("Error fetching the games data:", error);
             }
         };
         fetchGames();
     }, []);
-
-    // старый вариант рендера карточек (мокАпи)
-    // React.useEffect(() => {
-    //     fetch("https://66795ef418a459f6394f7682.mockapi.io/games")
-    //         .then((response) => response.json())
-    //         .then((arr) => {
-    //             console.log(arr);
-    //             setGames(arr);
-
-    //             const gameStatusesMap = {};
-    //             arr.forEach((game) => {
-    //                 const { gameName, status } = game;
-    //                 if (!gameStatusesMap[gameName]) {
-    //                     gameStatusesMap[gameName] = [];
-    //                 }
-    //                 gameStatusesMap[gameName].push(status);
-    //             });
-    //             console.log("объект с историей результатов:", gameStatusesMap);
-    //             setGameStatusesMap(gameStatusesMap);
-
-    //             const gameCounts = {};
-    //             arr.forEach((game) => {
-    //                 if (!gameCounts[game.gameName]) {
-    //                     gameCounts[game.gameName] = { ...game, count: 0 };
-    //                 }
-    //                 gameCounts[game.gameName].count += 1;
-    //             });
-    //             setUniqueGames(Object.values(gameCounts));
-
-    //         })
-    //         .catch((error) => console.error("Error fetching the games data:", error));
-    // }, []);
 
     return (
         <div className={styles.root}>
@@ -94,10 +60,10 @@ export default function Games() {
                     {showAll ? "Hide" : "Show all"}
                 </button>
             </div>
-            <FastInfo uniqueGames={uniqueGames} gameStatusesMap={gameStatusesMap} />
+            <FastInfo uniqueGames={uniqueGames} gameStats={gameStats} />
             <div className={styles.cards}>
                 {displayedGames.map((obj, i) => (
-                    <GameCard key={obj.id} {...obj} />
+                    <GameCard gameStats={gameStats} key={obj.id} {...obj} />
                 ))}
             </div>
         </div>
