@@ -1,0 +1,26 @@
+{
+  "files": {
+    "main.css": "/static/css/main.3bdcd0ee.css",
+    "main.js": "/static/js/main.ac572d10.js",
+    "static/media/Default.jpg": "/static/media/Default.cd9786527a3781597c3b.jpg",
+    "static/media/start_page.png": "/static/media/start_page.ddaf8ab2a85844e5693c.png",
+    "static/media/Logo.svg": "/static/media/Logo.7a6d6518edb1aad7eb1812643278f9a5.svg",
+    "static/media/clipboard-heart-svgrepo-com.svg": "/static/media/clipboard-heart-svgrepo-com.308f69a82772618de66de7a8a8b9d5e7.svg",
+    "static/media/logout-2-svgrepo-com.svg": "/static/media/logout-2-svgrepo-com.abcf1d3b292ee979f5fabfc52be64459.svg",
+    "static/media/Google-logo.svg": "/static/media/Google-logo.9aea369667f39791f9c78137097750cf.svg",
+    "static/media/Frame.svg": "/static/media/Frame.ae73602ed6b68a484371ae56eca4a1bc.svg",
+    "static/media/sad-circle-svgrepo-com.svg": "/static/media/sad-circle-svgrepo-com.c5bee4110dd5ac7349ed538fd8ae6058.svg",
+    "static/media/smile-circle-svgrepo-com.svg": "/static/media/smile-circle-svgrepo-com.8552be5c88830a28b30f3f2e68532178.svg",
+    "static/media/Facebook-logo.svg": "/static/media/Facebook-logo.ba43d2280b1e9bdaee9243976c7fed2d.svg",
+    "static/media/arrow-left.svg": "/static/media/arrow-left.a530764c9958e2f4f10a9b170fd5fb2c.svg",
+    "index.html": "/index.html",
+    "static/media/plus.svg": "/static/media/plus.42218ae9584bead416e013854bbad653.svg",
+    "static/media/menu.svg": "/static/media/menu.5837497a58e7d8572b92073d88053c43.svg",
+    "main.3bdcd0ee.css.map": "/static/css/main.3bdcd0ee.css.map",
+    "main.ac572d10.js.map": "/static/js/main.ac572d10.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.3bdcd0ee.css",
+    "static/js/main.ac572d10.js"
+  ]
+}
