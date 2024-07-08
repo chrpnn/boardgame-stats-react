@@ -7,7 +7,6 @@ import Start from "./pages/Start/Start";
 import Login from "./pages/LogIn/Login";
 import SignUp from "./pages/SignUp/SignUp";
 import Home from "./pages/Home/Home";
-import AddGamePage from "./pages/AddGamePage/AddGamePage";
 
 import { UserProvider } from "./UserContext";
 
@@ -17,8 +16,8 @@ const router = createBrowserRouter([
         element: <App />,
         children: [
             {
-                path: "/",
-                element: <h1> egdgdeg </h1>,
+                index: true,
+                element: <Home />,
             },
         ],
     },
@@ -37,10 +36,6 @@ const router = createBrowserRouter([
     {
         path: "/home",
         element: <Home />,
-    },
-    {
-        path: "/addgame",
-        element: <AddGamePage />,
     },
 ]);
 

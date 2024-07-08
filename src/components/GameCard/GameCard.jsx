@@ -15,7 +15,7 @@ export default function GameCard({ id, date, gameName, status, count, gameStats 
                 <p>Игр всего: {count}</p>
                 <p>Побед: {gameStats.find(game => game.gameName === gameName).wins} </p>
                 <p>Поражений: {count - gameStats.find(game => game.gameName === gameName).wins} </p>
-                <p>WR: {100 * (gameStats.find(game => game.gameName === gameName).wins / count).toFixed(3)} %</p>
+                <p>WR: {100 * (gameStats.find(game => game.gameName === gameName).wins / count).toFixed(2)} %</p>
             </div>
         </div>
     );
