@@ -1,5 +1,6 @@
 import React from "react";
 import { getFirestore, collection, getDocs } from "firebase/firestore";
+import { ref, getDownloadURL, getStorage } from "firebase/storage";
 import GameCard from "../GameCard/GameCard";
 import FastInfo from "../FastInfo/FastInfo";
 
@@ -7,6 +8,7 @@ import styles from "./Games.module.scss";
 
 export default function Games() {
     const [games, setGames] = React.useState([]);
+    const [imageUrlMap, setImageUrlMap] = React.useState({});
     const [uniqueGames, setUniqueGames] = React.useState([]);
     const [gameStats, setGameStats] = React.useState([]);
     const [showAll, setShowAll] = React.useState(false);
@@ -15,6 +17,7 @@ export default function Games() {
 
     React.useEffect(() => {
         const db = getFirestore();
+        const storage = getStorage();
 
         const fetchGames = async () => {
             try {
@@ -23,6 +26,23 @@ export default function Games() {
                     id: doc.id,
                     ...doc.data(),
                 }));
+
+                // Получение коллекции boardgames
+                const querySnapshotBg = await getDocs(collection(db, "boardgames"));
+                const arrBg = querySnapshotBg.docs.map((doc) => ({
+                    id: doc.id,
+                    ...doc.data(),
+                }));
+
+                // Создание отображения name -> imageURL
+                const imageUrlMap = {};
+                for (const game of arrBg) {
+                    const storageRef = ref(storage, game.imageURL);
+                    const url = await getDownloadURL(storageRef);
+                    imageUrlMap[game.name] = url;
+                }
+                setImageUrlMap(imageUrlMap);
+                console.log("imageUrlMap:", imageUrlMap);
 
                 setGames(arr);
 
@@ -63,7 +83,7 @@ export default function Games() {
             <FastInfo uniqueGames={uniqueGames} gameStats={gameStats} />
             <div className={styles.cards}>
                 {displayedGames.map((obj, i) => (
-                    <GameCard gameStats={gameStats} key={obj.id} {...obj} />
+                    <GameCard gameStats={gameStats} imageUrl={imageUrlMap[obj.gameName]} key={obj.id} {...obj} />
                 ))}
             </div>
         </div>

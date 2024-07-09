@@ -6,7 +6,7 @@ import { getAuth } from "firebase/auth";
 
 //delite later
 import { getFirestore } from "firebase/firestore";
-import { collection, addDoc } from "firebase/firestore"; 
+import { collection, addDoc, storage } from "firebase/firestore"; 
 
 
 // import { getAnalytics } from "firebase/analytics";

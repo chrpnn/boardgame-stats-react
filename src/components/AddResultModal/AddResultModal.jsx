@@ -1,55 +1,71 @@
 import React from "react";
 import styles from "./AddResultModal.module.scss";
-import { getFirestore, collection, addDoc } from "firebase/firestore";
+import { getFirestore, collection, getDocs, addDoc } from "firebase/firestore";
 
 export default function AddResultModal({ active, setActive }) {
     const [gameName, setGameName] = React.useState("");
     const [date, setDate] = React.useState("");
     const [status, setStatus] = React.useState("win");
+    const [boardgames, setBoardgames] = React.useState([]);
+    const [selectedGame, setSelectedGame] = React.useState(''); // Выбранная игра// Список игр, загружаемый с сервера
 
-    const db = getFirestore();
+    const db = getFirestore(); // Инициализация Firestore
 
-    const handleAddGame = async () => {
-        const newGame = {
-            gameName,
-            date,
-            status,
-            createdAt: new Date(),
+    // Используем useEffect для загрузки списка игр с сервера при монтировании компонента
+    React.useEffect(() => {
+        const fetchGames = async () => {
+            try {
+                // Получение документов из коллекции "boardgames"
+                const querySnapshot = await getDocs(collection(db, "boardgames"));
+                // Маппинг документов в массив объектов
+                const gamesList = querySnapshot.docs.map((doc) => ({
+                    id: doc.id,
+                    ...doc.data(),
+                }));
+                setBoardgames(gamesList); // Установка списка игр в локальное состояние
+            } catch (error) {
+                console.error("Error fetching games:", error);
+            }
         };
-    
+
+        fetchGames();
+    }, [db]); // Зависимость - db, чтобы эффект выполнялся только при изменении db
+
+    // Функция для добавления результата игры
+    const handleAddGame = async () => {
+        console.log("Selected game:", selectedGame);
+        if (!selectedGame || !selectedGame.name) {
+            alert("Please select a game."); // Проверка на выбор игры
+            return;
+        }
+
+        const newGameResult = {
+            gameName: selectedGame.name, // Имя выбранной игры
+            date, // Дата
+            status, // Статус (победа или поражение)
+            createdAt: new Date(), // Время создания
+        };
+
         try {
-            await addDoc(collection(db, "games"), newGame);
-            setActive(false);
+            await addDoc(collection(db, "games"), newGameResult);
+            setActive(false); // Закрытие модального окна
             console.log("Document written");
-            setGameName("");
+            setGameName(""); // Сброс полей формы
             setDate("");
             setStatus("win");
         } catch (error) {
-            console.error("Error adding game:", error);
+            console.error("Error adding game result:", error);
         }
     };
 
-    // старый вариант отправки данных партии (мокАпи)
-    // const handleAddGame = () => {
-    //     const newGame = {
-    //         gameName,
-    //         date,
-    //         status,
-    //     };
-
-    //     fetch("https://66795ef418a459f6394f7682.mockapi.io/games", {
-    //         method: "POST",
-    //         headers: {
-    //             "Content-Type": "application/json",
-    //         },
-    //         body: JSON.stringify(newGame),
-    //     })
-    //         .then((response) => response.json())
-    //         .then(() => {
-    //             setActive(false);
-    //         })
-    //         .catch((error) => console.error("Error adding game:", error));
-    // };
+    // Обработчик изменения выбора игры
+    const handleGameChange = (e) => {
+        const name = e.target.value;
+        console.log(name);
+        const game = boardgames.find((g) => g.name === name);
+        console.log(game);
+        setSelectedGame(game); // Установка объекта выбранной игры
+    };
 
     return (
         <div
@@ -64,14 +80,21 @@ export default function AddResultModal({ active, setActive }) {
                     <h2>Add New Result</h2>
                     <div className={styles.form}>
                         <label className={styles.label}>
-                            Game Name:
-                            <input
+                            Game:
+                            <select
                                 className={styles.input}
-                                type="text"
-                                value={gameName}
-                                onChange={(e) => setGameName(e.target.value)}
-                            />
+                                value={selectedGame ? selectedGame.name : ""}
+                                onChange={handleGameChange}
+                            >
+                                <option value="">Select a game</option>
+                                {boardgames.map((game) => (
+                                    <option key={game.id} value={game.name}>
+                                        {game.name}
+                                    </option>
+                                ))}
+                            </select>                            
                         </label>
+                        
                         <label className={styles.label}>
                             Date:
                             <input
@@ -96,7 +119,6 @@ export default function AddResultModal({ active, setActive }) {
                             className={styles.button}
                             onClick={() => {
                                 handleAddGame();
-                                
                             }}
                         >
                             Add Game

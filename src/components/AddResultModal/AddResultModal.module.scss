@@ -14,6 +14,7 @@
     pointer-events: none;
     transition: opacity 0.3s ease;
     padding-inline: 15px;
+    z-index: 1;
 
     &.active {
         pointer-events: all;
@@ -69,12 +70,23 @@
     padding: 20px;
     border-radius: 12px;
     background-color: $background-color;
-    transform: scale(0.5);
-    transition: transform 0.3s ease;
+
 
     &.active {
-        transform: scale(1);
+        animation: modalFadeIn 0.3s;
     }
 }
 
+
+@keyframes modalFadeIn {
+    from {
+        transform: translateY(-20%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
 
