@@ -4,8 +4,10 @@ import History from "../../components/History/History";
 import AddGameButton from "../../components/AddGameButton/AddGameButton";
 import AddResultModal from "../../components/AddResultModal/AddResultModal";
 import Games from "../../components/Games/Games";
+import Footer from "../../components/Footer/Footer";
 
 import styles from "./Home.module.scss";
+
 
 export default function Home({ }) {
     const [modalActive, setModalActive] = React.useState(false);
@@ -39,6 +41,7 @@ export default function Home({ }) {
                 />
                 <Games />
             </div>
+            <Footer />
         </div>
     );
 }
